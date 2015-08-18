@@ -1,0 +1,39 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}" type="text/css"/>
+
+<h1> {{recipe.title}} </h1>
+
+
+{% if recipe %}
+	<ul>
+		<p>Ingredients:</p>
+		{% for each in ingredient_array%}
+		
+		<li>{{each}}</li>
+		{% endfor %}
+		
+	</ul>
+
+	{% if recipe.instructions %}
+		<p> Instructions: {{recipe.instructions}}</p>
+		{% else %}
+		<p> Please see original recipe link for instructions. </p>
+		{% endif %}
+		<p> Recipe Link: <a href={{recipe.original_url}}>{{recipe.title}}</a>  taken from {{recipe.publisher}}</p>
+
+		
+	<form action="/cookbook/add_recipe" method="GET">
+	<br>
+	<input type="hidden" value="{{recipe.id}}" name='recipe_id'>
+	<input type="submit" value="Add to Cookbook">
+	</form>
+
+{% else %}
+
+<p> No recipes related to your search are available. </p>
+
+{% endif %}
+
+
+

@@ -1,0 +1,8 @@
+<h1>This is the homepage</h1>
+
+<h2> Noms that contain your search term: </h2>
+<ul>
+	{% for item in recipes%}
+	<li> <a href="/cookbook/recipe{{item.id}}">{{item.title}}</a> </li>
+	{% endfor %}
+</ul>

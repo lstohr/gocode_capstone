@@ -1,0 +1,28 @@
+{% extends "cookbook/base.html" %}
+{% block content %}
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}" type="text/css"/>
+
+<h1> Create Account Page </h1>
+
+<div class="input-group">
+	<form action="/cookbook/register/" method="POST">
+		{% csrf_token %}
+	Signup Here:<br>
+	<input id="first_name" type="text" name="first_name" value = "Enter your first name" ><br>
+	<input id ="username" type="text" name="username" value ="Enter a user name"><br>
+	<input id="email" type="text" name="email" value = "Enter your email" ><br>
+	<input id="password" type="text" value = "Enter a password" name="password"><br>
+	<input type="submit" value="Sign Up!">
+	</form>
+</div>
+
+ 
+
+{% endblock %}
+
+
+
+
+

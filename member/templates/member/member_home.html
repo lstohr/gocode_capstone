@@ -1,0 +1,12 @@
+<h1> Member Homepage </h1>
+
+<p>Hi {{user.username}}</p>
+
+{% for entry in user_cookbook %}
+	<ul> <li> <a href="/cookbook/member/recipe{{entry.recipe_id.pk}}">{{entry.recipe_id.title}} </a> </li>
+	</ul>
+	{% endfor %}
+
+<a href="/cookbook/logout_user">
+   <input type="button" value="Logout" />
+</a>

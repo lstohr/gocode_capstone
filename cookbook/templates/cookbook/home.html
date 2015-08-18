@@ -1,0 +1,50 @@
+{% extends "cookbook/base.html" %}
+{% block content %}
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}" type="text/css"/>
+
+
+<h1>This is the homepage</h1>
+
+<a href="/cookbook/login_user">
+   <input type="button" value="Login" />
+</a>
+
+<h2> Noms: </h2>
+
+<form>
+	Search for:<br>
+	<input type="search" name="search_foodnetwork">
+	<input type="submit" value="Submit to foodnetwork">
+</form>
+
+<ul>
+	{% for item in recipes%}
+	<li> <a href="/cookbook/recipe{{item.id}}">{{item.title}}</a> ({{item.category}}) </li>
+	{% endfor %}
+</ul>
+
+<a href="/cookbook/create_account">
+   <input type="button" value="Create Account" />
+</a>
+
+<div class="pagination">
+    <span class="step-links">
+    	{% if recipes.has_next or recipes.has_previous%}
+	        {% if recipes.has_previous %}
+	            <a href="?page={{ recipes.previous_page_number }}">previous</a>
+	        {% endif %}
+
+	        <span class="current">
+	            Page {{ recipes.number }} of {{ recipes.paginator.num_pages }}.
+	        </span>
+
+	        {% if recipes.has_next %}
+	            <a href="?page={{ recipes.next_page_number }}">next</a>
+	        {% endif %}
+	   	{% endif %}
+    </span>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "cookbook/base.html" %}
+{% block content %}
+
+<h1> My Recipe: {{recipe.title}} </h1>
+
+
+{% if recipe %}
+	<ul>
+		<p>Ingredients:</p>
+		{% for each in ingredient_array%}
+		
+		<li>{{each}}</li>
+		{% endfor %}
+		
+	</ul>
+
+	{% if recipe.instructions %}
+		<p> Instructions: {{recipe.instructions}}</p>
+		{% else %}
+		<p> Please see original recipe link for instructions. </p>
+		{% endif %}
+		<p> Recipe Link: <a href={{recipe.original_url}}>{{recipe.title}}</a>  taken from {{recipe.publisher}}</p>
+
+{% endif %}
+
+
+
+{% if notes %}
+	{% for note in notes %}
+		<p>{{note.note_text}}</p>
+		
+		<form action="/cookbook/remove_note" method="GET">
+			<br>
+			<input type="hidden" value="{{note.id}}" name='note_id'>
+			<input type="submit" value="Delete this note">
+			<input type="hidden" value="{{recipe.id}}" name="recipe_id">
+		</form>
+	
+	{% endfor %}
+{% endif %}
+
+<form action="/cookbook/add_note" id="recipe_note">
+	<textarea name="recipe_note" form="recipe_note">Enter a note for this recipe</textarea>
+  	<input type="submit" value="Add note">
+  	<input type="hidden" value="{{recipe.id}}" name="recipe_id" />
+</form>
+
+
+	<form action="/cookbook/remove_recipe" method="GET">
+	<br>
+	<input type="hidden" value="{{recipe.id}}" name='recipe_id'>
+	<input type="submit" value="Remove this recipe from my cookbook">
+	</form>
+
+{% endblock %}

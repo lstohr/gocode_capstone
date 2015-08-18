@@ -1,0 +1,9 @@
+<h1> Login Page </h1>
+
+	<form action="/cookbook/authenticate_user" method="POST">
+		{% csrf_token %}
+	Login Here:<br>
+	<input id ="username" type="text" name="username" value ="Enter your user name"><br>
+	<input id="password" type="text" value = "Enter your password" name="password"><br>
+	<input type="submit" value="Submit Info">
+	</form>
