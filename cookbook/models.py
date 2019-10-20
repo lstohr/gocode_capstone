@@ -35,6 +35,7 @@ class Note(models.Model):
 
 def get_recipe_data(search_term):
 
+	# This is the aspect of my project that felt meaningful to me during the botocamp. Though not technically glamourous or fancy, it is when I really appreciated the power of technology to connect us to each other - technology's ability to improve our lives as inviduals by connecting us to collective resources.
 	url = "http://food2fork.com/api/search?key=d4438ab104014743528bec98686f3e42&q=" + search_term
 
 	results = requests.get(url).json()
@@ -63,19 +64,13 @@ def add_recipe_to_db(recipe_data):
 	for key in recipe_data:
 
 		if key not in id_list:
-			#refactor to one line Recipe.create()
-			r = Recipe()
-			r.recipe_id_from_api = key
-			r.title = recipe_data[key]["title"]
-			r.original_url = recipe_data[key]["source_url"]
-			r.ingredients = recipe_data[key]["ingredients"]
-			r.publisher = recipe_data[key]["publisher"]
+			r = Recipe(recipe_id_from_api=key, title=recipe_data[key]["title"],  original_url=recipe_data[key]["source_url"], ingredients=recipe_data[key]["ingredients"], publisher=recipe_data[key]["publisher"] )
 			r.save()
 
 	return "Added that batch"
 	
 def get_fn_recipe_urls(search_term):
-	#search_term = "squash"
+	
 	search_url = 'http://www.foodnetwork.com/search/search-results.html?searchTerm=' + search_term + '&form=global&_charset_=UTF-8'
 	page = urllib2.urlopen(search_url).read()
 	soup = BeautifulSoup(page, "lxml")
@@ -90,57 +85,42 @@ def get_fn_recipe_urls(search_term):
 	one_recipe_base_url = "http://www.foodnetwork.com" 
 
 	for each in links:
+		#get rid of dupes and eliminate non-recipes
 		if each not in filtered_links and each[-11:] == "recipe.html":
-			filtered_links.append(each) # got rid of duplicates, but index on 
-			print "printing here ", filtered_links
+			filtered_links.append(each)
 
 	for each in filtered_links:
 		filtered_links2.append(one_recipe_base_url + each)
 
-
-	print "filtered links2 here: ", filtered_links2
-
-	# return filtered_links2[:-1] 
-
 	for link in filtered_links2[:-1]: # don't need index a-z recipe link on end
-		#print link
-		print "printing link here: ", link
 		page = urllib2.urlopen(link).read()
 		soup = BeautifulSoup(page, "lxml")
 		
-		num = len(soup.find_all(itemprop="ingredients"))
-		#print "ingredient number ", num
+		num_of_ingredients = len(soup.find_all(itemprop="ingredients"))
 		i = 0
 		ingredient_string = ""
-		while i < num: # get all the ingredients 
+		while i < num_of_ingredients: # get all the ingredients 
 			ingredient_string += (soup.find_all(itemprop="ingredients")[i].get_text() + "^^")
 			i += 1
-		#print "ingredient array here: ", ingredient_string
 
 		messy_instructions = soup.find(itemprop="recipeInstructions").find_all("p")
-		num2 = len(messy_instructions)
+		instruction_length = len(messy_instructions)
 		title = soup.find(itemprop="name").get_text()
-		print "title here ", title
 		i = 0
 		instruction_string = ""
-		while i < num2: # get the instructions
+		while i < instruction_length: # get the instructions
 			instruction_string += soup.find(itemprop="recipeInstructions").find_all("p")[i].get_text()
 			i += 1
-		#print "instruction array here: ", instruction_string # last two bits are not actual instructions
 			
-		recipes_in_db = Recipe.objects.all() # make sure not already in database
+		recipes_in_db = Recipe.objects.all() 
 		original_url_list = []
 			
 		for recipe in recipes_in_db:
 			original_url_list.append(recipe.original_url)
 
+		# add new Food Network recipe if we do not already have it based on link (recipe names are not always unique enough)
 		if link not in original_url_list: 
-			r = Recipe() # create new instance
-			r.ingredients = ingredient_string
-			r.original_url = link
-			r.title = title
-			r.instructions = instruction_string
-			r.publisher = "Food Network"
+			r = Recipe(ingredients=ingredient_string, original_url=link, title=title, instructions=instruction_string, publisher="Food Network") 
 			r.save()
 
 	return "Ok done"
