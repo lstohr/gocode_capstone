@@ -36,7 +36,7 @@ class Note(models.Model):
 def get_recipe_data(search_term):
 
 	# This is the aspect of my project that felt meaningful to me during the bootcamp. 
-	# Though not technically glamourous or fancy, getting data back from other websites helped me really appreciated the power of technology to 
+	# Though not technically glamourous or fancy, getting data back from other websites helped me appreciate the power of technology to 
 	# connect us to each other - technology's ability to improve our lives as individuals by connecting us to collective resources.
 	url = "http://food2fork.com/api/search?key=d4438ab104014743528bec98686f3e42&q=" + search_term
 
